@@ -56,6 +56,7 @@ class IdempotentJobMiddleware
 
         try {
             // Double-check after acquiring lock
+            // @phpstan-ignore-next-line (double-check locking pattern for race condition safety)
             if (Cache::has($cacheKey)) {
                 return;
             }
