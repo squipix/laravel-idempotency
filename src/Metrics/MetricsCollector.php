@@ -145,7 +145,7 @@ class MetricsCollector
 
         try {
             $namespace = config('idempotency.metrics.prometheus.namespace', 'app');
-            
+
             switch ($type) {
                 case 'histogram':
                     if (method_exists($this->prometheusCollector, 'getOrRegisterHistogram')) {

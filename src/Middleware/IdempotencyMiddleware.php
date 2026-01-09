@@ -20,7 +20,7 @@ class IdempotencyMiddleware
     public function handle(Request $request, Closure $next)
     {
         $startTime = microtime(true);
-        
+
         // Only apply to non-GET requests
         if (in_array($request->method(), ['GET', 'HEAD', 'OPTIONS'])) {
             return $next($request);
@@ -53,12 +53,12 @@ class IdempotencyMiddleware
             $this->metrics->incrementLockFailed();
             return response()->json(['message' => 'Request in progress'], 409);
         }
-        
+
         $this->metrics->incrementLockAcquired();
 
         try {
             $this->metrics->incrementCacheMiss();
-            
+
             $record = $this->service->getRecord(
                 $key,
                 $request->method(),

@@ -19,7 +19,7 @@ class MetricsController extends Controller
 {
     /**
      * Expose Prometheus metrics
-     * 
+     *
      * Route: GET /metrics
      * Middleware: ['auth.basic'] (recommended)
      */
@@ -29,10 +29,10 @@ class MetricsController extends Controller
             $registry = app('prometheus');
             $renderer = new RenderTextFormat();
             $metrics = $renderer->render($registry->getMetricFamilySamples());
-            
+
             return response($metrics)
                 ->header('Content-Type', RenderTextFormat::MIME_TYPE);
-                
+
         } catch (\Throwable $e) {
             return response('# Metrics unavailable', 503)
                 ->header('Content-Type', 'text/plain');
@@ -41,14 +41,14 @@ class MetricsController extends Controller
 
     /**
      * Get idempotency metrics summary
-     * 
+     *
      * Route: GET /api/metrics/idempotency
      * Middleware: ['auth:sanctum']
      */
     public function summary()
     {
         $metrics = app(\squipix\Idempotency\Metrics\MetricsCollector::class);
-        
+
         return response()->json([
             'metrics' => $metrics->getMetricsSummary(),
             'timestamp' => now()->toIso8601String(),
@@ -98,10 +98,10 @@ public function register()
             'database' => config('database.redis.default.database', 0),
             'timeout' => 0.1,
         ]);
-        
+
         return new CollectorRegistry(new Redis());
     });
-    
+
     // Or use in-memory adapter (for testing)
     // $this->app->singleton('prometheus', function ($app) {
     //     return new CollectorRegistry(new InMemory());
@@ -126,7 +126,7 @@ class IdempotencyCard extends Card
     {
         $metrics = app(\squipix\Idempotency\Metrics\MetricsCollector::class);
         $summary = $metrics->getMetricsSummary();
-        
+
         return view('pulse.idempotency', [
             'summary' => $summary,
         ]);
@@ -151,17 +151,17 @@ class IdempotencyCard extends Card
                 <div class="text-sm text-gray-600">Cache Hits</div>
                 <div class="text-2xl font-bold">{{ $summary['cache_hits'] ?? 0 }}</div>
             </div>
-            
+
             <div class="p-4 bg-gray-100 rounded">
                 <div class="text-sm text-gray-600">Cache Misses</div>
                 <div class="text-2xl font-bold">{{ $summary['cache_misses'] ?? 0 }}</div>
             </div>
-            
+
             <div class="p-4 bg-gray-100 rounded">
                 <div class="text-sm text-gray-600">Jobs Executed</div>
                 <div class="text-2xl font-bold">{{ $summary['jobs_executed'] ?? 0 }}</div>
             </div>
-            
+
             <div class="p-4 bg-gray-100 rounded">
                 <div class="text-sm text-gray-600">Jobs Skipped</div>
                 <div class="text-2xl font-bold">{{ $summary['jobs_skipped'] ?? 0 }}</div>
@@ -178,11 +178,11 @@ class IdempotencyCard extends Card
 */
 
 // Cache Hit Ratio (Percentage)
-// sum(rate(idempotency_cache_hits_total[5m])) / 
+// sum(rate(idempotency_cache_hits_total[5m])) /
 // (sum(rate(idempotency_cache_hits_total[5m])) + sum(rate(idempotency_cache_misses_total[5m]))) * 100
 
 // Average Response Time
-// rate(idempotency_request_duration_seconds_sum[5m]) / 
+// rate(idempotency_request_duration_seconds_sum[5m]) /
 // rate(idempotency_request_duration_seconds_count[5m])
 
 // 95th Percentile Response Time
@@ -221,7 +221,7 @@ receivers:
         channel: '#idempotency-alerts'
         title: 'Idempotency Alert'
         text: '{{ range .Alerts }}{{ .Annotations.summary }}{{ end }}'
-    
+
     email_configs:
       - to: 'team@example.com'
         from: 'alerts@example.com'
@@ -241,21 +241,21 @@ receivers:
 Route::get('/health/idempotency', function () {
     $metrics = app(\squipix\Idempotency\Metrics\MetricsCollector::class);
     $summary = $metrics->getMetricsSummary();
-    
+
     if (!$summary['enabled']) {
         return response()->json([
             'status' => 'disabled',
             'message' => 'Metrics collection is disabled'
         ], 200);
     }
-    
+
     $cacheTotal = $summary['cache_hits'] + $summary['cache_misses'];
-    $hitRatio = $cacheTotal > 0 
-        ? ($summary['cache_hits'] / $cacheTotal) * 100 
+    $hitRatio = $cacheTotal > 0
+        ? ($summary['cache_hits'] / $cacheTotal) * 100
         : 0;
-    
+
     $healthy = $hitRatio >= 70 && $summary['errors'] < 10;
-    
+
     return response()->json([
         'status' => $healthy ? 'healthy' : 'degraded',
         'cache_hit_ratio' => round($hitRatio, 2),
@@ -287,48 +287,48 @@ class IdempotencyMetricsTest extends TestCase
     {
         $metrics = app(MetricsCollector::class);
         $before = $metrics->getMetricsSummary();
-        
+
         // Make idempotent request twice
         $key = 'test-' . uniqid();
-        
-        $this->postJson('/api/payments', 
+
+        $this->postJson('/api/payments',
             ['amount' => 1000],
             ['Idempotency-Key' => $key]
         );
-        
-        $this->postJson('/api/payments', 
+
+        $this->postJson('/api/payments',
             ['amount' => 1000],
             ['Idempotency-Key' => $key]
         );
-        
+
         $after = $metrics->getMetricsSummary();
-        
+
         // Should have 1 cache hit
         $this->assertEquals(
             $before['cache_hits'] + 1,
             $after['cache_hits']
         );
     }
-    
+
     public function test_metrics_track_payload_mismatch()
     {
         $metrics = app(MetricsCollector::class);
         $before = $metrics->getMetricsSummary();
-        
+
         $key = 'test-' . uniqid();
-        
-        $this->postJson('/api/payments', 
+
+        $this->postJson('/api/payments',
             ['amount' => 1000],
             ['Idempotency-Key' => $key]
         )->assertStatus(201);
-        
-        $this->postJson('/api/payments', 
+
+        $this->postJson('/api/payments',
             ['amount' => 2000], // Different amount
             ['Idempotency-Key' => $key]
         )->assertStatus(422);
-        
+
         $after = $metrics->getMetricsSummary();
-        
+
         $this->assertEquals(
             $before['payload_mismatches'] + 1,
             $after['payload_mismatches']

@@ -39,9 +39,9 @@ class CleanupExpiredKeysCommand extends Command
         }
 
         $deleted = $service->cleanupExpiredRecords($days);
-        
+
         $this->info("Successfully deleted {$deleted} expired records");
-        
+
         return self::SUCCESS;
     }
 }
