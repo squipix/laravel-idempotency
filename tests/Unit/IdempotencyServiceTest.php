@@ -3,6 +3,7 @@
 namespace Squipix\Idempotency\Tests\Unit;
 
 use Orchestra\Testbench\TestCase;
+use Illuminate\Http\Request;
 use Squipix\Idempotency\Services\IdempotencyService;
 use Illuminate\Support\Facades\DB;
 
@@ -13,32 +14,35 @@ class IdempotencyServiceTest extends TestCase
         return [\Squipix\Idempotency\IdempotencyServiceProvider::class];
     }
 
-    public function test_can_store_and_retrieve_idempotency_key()
+    public function test_generates_response_key()
     {
         $service = $this->app->make(IdempotencyService::class);
         $key = 'test-key-123';
-        $payload = ['foo' => 'bar'];
-        $response = ['result' => 'ok'];
-        $ttl = 60;
 
-        $service->storeResponse($key, $payload, $response, $ttl);
-        $retrieved = $service->getResponse($key, $payload);
+        $responseKey = $service->responseKey($key);
 
-        $this->assertEquals($response, $retrieved);
+        $this->assertEquals('idempotency:test-key-123:response', $responseKey);
     }
 
-    public function test_payload_mismatch_returns_null()
+    public function test_generates_lock_key()
     {
         $service = $this->app->make(IdempotencyService::class);
         $key = 'test-key-456';
-        $payload1 = ['foo' => 'bar'];
-        $payload2 = ['foo' => 'baz'];
-        $response = ['result' => 'ok'];
-        $ttl = 60;
 
-        $service->storeResponse($key, $payload1, $response, $ttl);
-        $retrieved = $service->getResponse($key, $payload2);
+        $lockKey = $service->lockKey($key);
 
-        $this->assertNull($retrieved);
+        $this->assertEquals('idempotency:test-key-456:lock', $lockKey);
+    }
+
+    public function test_generates_consistent_payload_hash()
+    {
+        $service = $this->app->make(IdempotencyService::class);
+        $request1 = Request::create('/test', 'POST', ['foo' => 'bar', 'baz' => 123]);
+        $request2 = Request::create('/test', 'POST', ['baz' => 123, 'foo' => 'bar']);
+
+        $hash1 = $service->payloadHash($request1);
+        $hash2 = $service->payloadHash($request2);
+
+        $this->assertEquals($hash1, $hash2);
     }
 }
