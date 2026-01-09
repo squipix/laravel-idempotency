@@ -148,6 +148,8 @@ The **squipix/laravel-idempotency** package has been successfully created with a
 ✅ Cleanup command included  
 ✅ Comprehensive documentation  
 ✅ Real-world examples  
+✅ **Production metrics (Prometheus & Pulse)**  
+✅ **Performance monitoring built-in**  
 
 ---
 

@@ -408,6 +408,54 @@ public function test_job_executes_only_once_on_retry()
 - Data types (string "100" vs int 100)
 - Nested objects
 
+## Metrics & Monitoring
+
+The package includes comprehensive metrics support for production monitoring.
+
+### Quick Setup
+
+```env
+# Enable metrics
+IDEMPOTENCY_METRICS_ENABLED=true
+
+# Prometheus support
+IDEMPOTENCY_PROMETHEUS_ENABLED=true
+
+# Laravel Pulse support
+IDEMPOTENCY_PULSE_ENABLED=true
+```
+
+### Collected Metrics
+
+- **Cache hits/misses** - Monitor cache performance
+- **Lock acquisitions/failures** - Track concurrent requests
+- **Payload mismatches** - Detect client-side issues
+- **Request duration** - Performance monitoring (p50, p95, p99)
+- **Job executions/skips** - Queue idempotency tracking
+- **Error rates** - System health monitoring
+
+### Supported Platforms
+
+- **Prometheus** - Industry-standard metrics with Grafana dashboards
+- **Laravel Pulse** - Real-time application monitoring
+- **Custom backends** - Extensible architecture
+
+### Example Prometheus Queries
+
+```promql
+# Cache hit ratio
+sum(rate(idempotency_cache_hits_total[5m])) /
+(sum(rate(idempotency_cache_hits_total[5m])) + sum(rate(idempotency_cache_misses_total[5m])))
+
+# 95th percentile response time
+histogram_quantile(0.95, rate(idempotency_request_duration_seconds_bucket[5m]))
+
+# Requests per second
+sum(rate(idempotency_cache_hits_total[5m])) + sum(rate(idempotency_cache_misses_total[5m]))
+```
+
+**For detailed metrics setup, see [METRICS.md](METRICS.md)**
+
 ## License
 
 This package is open-sourced software licensed under the [MIT license](LICENSE).
