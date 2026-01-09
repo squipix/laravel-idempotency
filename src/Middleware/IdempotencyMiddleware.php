@@ -8,15 +8,19 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use squipix\Idempotency\Services\IdempotencyService;
+use squipix\Idempotency\Metrics\MetricsCollector;
 
 class IdempotencyMiddleware
 {
     public function __construct(
-        protected IdempotencyService $service
+        protected IdempotencyService $service,
+        protected MetricsCollector $metrics
     ) {}
 
     public function handle(Request $request, Closure $next)
     {
+        $startTime = microtime(true);
+        
         // Only apply to non-GET requests
         if (in_array($request->method(), ['GET', 'HEAD', 'OPTIONS'])) {
             return $next($request);
@@ -37,16 +41,24 @@ class IdempotencyMiddleware
 
         // Redis replay
         if ($cached = Cache::get($this->service->responseKey($key))) {
+            $this->metrics->incrementCacheHit('redis');
+            $duration = microtime(true) - $startTime;
+            $this->metrics->recordRequestDuration($duration, 'cache_hit');
             return $this->restoreResponse($cached);
         }
 
         $lock = Cache::lock($this->service->lockKey($key), config('idempotency.lock_ttl'));
 
         if (!$lock->get()) {
+            $this->metrics->incrementLockFailed();
             return response()->json(['message' => 'Request in progress'], 409);
         }
+        
+        $this->metrics->incrementLockAcquired();
 
         try {
+            $this->metrics->incrementCacheMiss();
+            
             $record = $this->service->getRecord(
                 $key,
                 $request->method(),
@@ -58,11 +70,13 @@ class IdempotencyMiddleware
                     config('idempotency.reject_payload_mismatch') &&
                     $record->payload_hash !== $payloadHash
                 ) {
+                    $this->metrics->incrementPayloadMismatch();
                     return response()->json([
                         'message' => 'Payload mismatch for idempotency key'
                     ], 422);
                 }
 
+                $this->metrics->incrementCacheHit('database');
                 $responseData = json_decode($record->response, true);
                 $response = response()->json($responseData, $record->status_code);
 

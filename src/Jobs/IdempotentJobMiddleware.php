@@ -3,9 +3,17 @@ namespace squipix\Idempotency\Jobs;
 
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
+use squipix\Idempotency\Metrics\MetricsCollector;
 
 class IdempotentJobMiddleware
 {
+    protected MetricsCollector $metrics;
+
+    public function __construct()
+    {
+        $this->metrics = app(MetricsCollector::class);
+    }
+
     public function handle($job, $next)
     {
         // Check if queue idempotency is enabled
@@ -26,6 +34,7 @@ class IdempotentJobMiddleware
 
         // Check if already processed
         if (Cache::has($cacheKey)) {
+            $this->metrics->incrementJobSkipped();
             Log::info('Job skipped due to idempotency', [
                 'job' => get_class($job),
                 'key' => $key
@@ -60,8 +69,13 @@ class IdempotentJobMiddleware
                 'job_class' => get_class($job),
             ], $ttl);
 
+            $this->metrics->incrementJobExecuted('success');
+
             return $result;
         } catch (\Throwable $e) {
+            $this->metrics->incrementJobExecuted('failed');
+            $this->metrics->incrementError('job_failed');
+
             // Don't mark as processed if job failed
             Cache::forget($cacheKey);
 

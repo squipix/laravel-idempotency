@@ -5,6 +5,7 @@ use Illuminate\Support\ServiceProvider;
 use squipix\Idempotency\Services\IdempotencyService;
 use squipix\Idempotency\Middleware\IdempotencyMiddleware;
 use squipix\Idempotency\Console\CleanupExpiredKeysCommand;
+use squipix\Idempotency\Metrics\MetricsCollector;
 
 class IdempotencyServiceProvider extends ServiceProvider
 {
@@ -18,6 +19,11 @@ class IdempotencyServiceProvider extends ServiceProvider
                 $app['cache']->store(),
                 $app['db']->connection()
             );
+        });
+
+        // Register metrics collector as singleton
+        $this->app->singleton(MetricsCollector::class, function ($app) {
+            return new MetricsCollector();
         });
     }
 
