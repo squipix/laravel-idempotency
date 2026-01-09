@@ -1,7 +1,10 @@
 # Laravel Idempotency
 
-[![Latest Version](https://img.shields.io/packagist/v/squipix/laravel-idempotency.svg)](https://packagist.org/packages/squipix/laravel-idempotency)
-[![License](https://img.shields.io/packagist/l/squipix/laravel-idempotency.svg)](https://packagist.org/packages/squipix/laravel-idempotency)
+[![Latest Version](https://img.shields.io/packagist/v/squipix/laravel-idempotency.svg?style=flat-square)](https://packagist.org/packages/squipix/laravel-idempotency)
+[![Total Downloads](https://img.shields.io/packagist/dt/squipix/laravel-idempotency.svg?style=flat-square)](https://packagist.org/packages/squipix/laravel-idempotency)
+[![GitHub Tests](https://img.shields.io/github/actions/workflow/status/squipix/laravel-idempotency/tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/squipix/laravel-idempotency/actions)
+[![GitHub Code Style](https://img.shields.io/github/actions/workflow/status/squipix/laravel-idempotency/code-style.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/squipix/laravel-idempotency/actions)
+[![License](https://img.shields.io/packagist/l/squipix/laravel-idempotency.svg?style=flat-square)](https://packagist.org/packages/squipix/laravel-idempotency)
 
 Stripe-style idempotency for Laravel APIs and queues. Prevent duplicate API requests and duplicate job executions with minimal configuration.
 

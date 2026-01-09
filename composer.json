@@ -23,6 +23,11 @@
         "illuminate/http": "^10.0|^11.0"
     },
     "require-dev": {
+        "orchestra/testbench": "^8.0|^9.0",
+        "phpunit/phpunit": "^10.0|^11.0",
+        "friendsofphp/php-cs-fixer": "^3.0",
+        "phpstan/phpstan": "^1.10",
+        "mockery/mockery": "^1.6",
         "promphp/prometheus_client_php": "^2.0",
         "laravel/pulse": "^1.0"
     },
@@ -40,6 +45,19 @@
             "providers": [
                 "squipix\\Idempotency\\IdempotencyServiceProvider"
             ]
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit",
+        "test-coverage": "vendor/bin/phpunit --coverage-html coverage",
+        "check-style": "vendor/bin/php-cs-fixer fix --dry-run --diff",
+        "fix-style": "vendor/bin/php-cs-fixer fix",
+        "analyse": "vendor/bin/phpstan analyse"
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "php-http/discovery": true
         }
     },
     "minimum-stability": "stable",
