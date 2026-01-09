@@ -112,7 +112,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
-use squipix\Idempotency\Jobs\IdempotentJobMiddleware;
+use Squipix\Idempotency\Jobs\IdempotentJobMiddleware;
 
 class CapturePayment implements ShouldQueue
 {
@@ -254,7 +254,7 @@ Schedule a cleanup command:
 
 ```php
 use Illuminate\Console\Scheduling\Schedule;
-use squipix\Idempotency\Services\IdempotencyService;
+use Squipix\Idempotency\Services\IdempotencyService;
 
 protected function schedule(Schedule $schedule)
 {
@@ -270,7 +270,7 @@ protected function schedule(Schedule $schedule)
 
 ```php
 // In a service provider
-use squipix\Idempotency\Services\IdempotencyService;
+use Squipix\Idempotency\Services\IdempotencyService;
 
 $this->app->singleton(IdempotencyService::class, function ($app) {
     return new IdempotencyService(

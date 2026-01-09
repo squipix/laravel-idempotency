@@ -1,5 +1,6 @@
 <?php
-namespace squipix\Idempotency\Metrics;
+
+namespace Squipix\Idempotency\Metrics;
 
 use Illuminate\Support\Facades\Cache;
 

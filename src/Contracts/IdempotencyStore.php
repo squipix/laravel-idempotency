@@ -1,5 +1,6 @@
 <?php
-namespace squipix\Idempotency\Contracts;
+
+namespace Squipix\Idempotency\Contracts;
 
 interface IdempotencyStore
 {

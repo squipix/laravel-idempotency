@@ -1,5 +1,6 @@
 <?php
-namespace squipix\Idempotency\Middleware;
+
+namespace Squipix\Idempotency\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
@@ -7,8 +8,8 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use squipix\Idempotency\Services\IdempotencyService;
-use squipix\Idempotency\Metrics\MetricsCollector;
+use Squipix\Idempotency\Services\IdempotencyService;
+use Squipix\Idempotency\Metrics\MetricsCollector;
 
 class IdempotencyMiddleware
 {

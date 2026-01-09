@@ -438,7 +438,7 @@ Metrics collection has **minimal overhead**:
 ```php
 namespace App\Metrics;
 
-use squipix\Idempotency\Metrics\MetricsCollector as BaseCollector;
+use Squipix\Idempotency\Metrics\MetricsCollector as BaseCollector;
 
 class CustomMetricsCollector extends BaseCollector
 {
@@ -466,7 +466,7 @@ $this->app->singleton(MetricsCollector::class, function ($app) {
 ### Check if Metrics are Enabled
 
 ```php
-use squipix\Idempotency\Metrics\MetricsCollector;
+use Squipix\Idempotency\Metrics\MetricsCollector;
 
 $metrics = app(MetricsCollector::class);
 $summary = $metrics->getMetricsSummary();
@@ -479,7 +479,7 @@ dd($summary);
 ```php
 php artisan tinker
 
->>> $metrics = app(\squipix\Idempotency\Metrics\MetricsCollector::class);
+>>> $metrics = app(\Squipix\Idempotency\Metrics\MetricsCollector::class);
 >>> $metrics->incrementCacheHit('redis');
 >>> $metrics->getMetricsSummary();
 ```

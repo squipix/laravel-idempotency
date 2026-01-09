@@ -1,9 +1,10 @@
 <?php
-namespace squipix\Idempotency\Jobs;
+
+namespace Squipix\Idempotency\Jobs;
 
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
-use squipix\Idempotency\Metrics\MetricsCollector;
+use Squipix\Idempotency\Metrics\MetricsCollector;
 
 class IdempotentJobMiddleware
 {

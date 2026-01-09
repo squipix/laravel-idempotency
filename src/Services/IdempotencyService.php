@@ -1,5 +1,6 @@
 <?php
-namespace squipix\Idempotency\Services;
+
+namespace Squipix\Idempotency\Services;
 
 use Illuminate\Cache\Repository as CacheRepository;
 use Illuminate\Database\Connection;

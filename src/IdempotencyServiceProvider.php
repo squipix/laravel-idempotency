@@ -1,11 +1,12 @@
 <?php
-namespace squipix\Idempotency;
+
+namespace Squipix\Idempotency;
 
 use Illuminate\Support\ServiceProvider;
-use squipix\Idempotency\Services\IdempotencyService;
-use squipix\Idempotency\Middleware\IdempotencyMiddleware;
-use squipix\Idempotency\Console\CleanupExpiredKeysCommand;
-use squipix\Idempotency\Metrics\MetricsCollector;
+use Squipix\Idempotency\Services\IdempotencyService;
+use Squipix\Idempotency\Middleware\IdempotencyMiddleware;
+use Squipix\Idempotency\Console\CleanupExpiredKeysCommand;
+use Squipix\Idempotency\Metrics\MetricsCollector;
 
 class IdempotencyServiceProvider extends ServiceProvider
 {

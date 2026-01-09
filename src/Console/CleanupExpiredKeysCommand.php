@@ -1,8 +1,9 @@
 <?php
-namespace squipix\Idempotency\Console;
+
+namespace Squipix\Idempotency\Console;
 
 use Illuminate\Console\Command;
-use squipix\Idempotency\Services\IdempotencyService;
+use Squipix\Idempotency\Services\IdempotencyService;
 
 class CleanupExpiredKeysCommand extends Command
 {

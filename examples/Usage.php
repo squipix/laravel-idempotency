@@ -123,7 +123,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use squipix\Idempotency\Jobs\IdempotentJobMiddleware;
+use Squipix\Idempotency\Jobs\IdempotentJobMiddleware;
 
 class CapturePaymentJob implements ShouldQueue
 {

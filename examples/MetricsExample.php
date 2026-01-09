@@ -47,7 +47,7 @@ class MetricsController extends Controller
      */
     public function summary()
     {
-        $metrics = app(\squipix\Idempotency\Metrics\MetricsCollector::class);
+        $metrics = app(\Squipix\Idempotency\Metrics\MetricsCollector::class);
 
         return response()->json([
             'metrics' => $metrics->getMetricsSummary(),
@@ -124,7 +124,7 @@ class IdempotencyCard extends Card
 {
     public function render()
     {
-        $metrics = app(\squipix\Idempotency\Metrics\MetricsCollector::class);
+        $metrics = app(\Squipix\Idempotency\Metrics\MetricsCollector::class);
         $summary = $metrics->getMetricsSummary();
 
         return view('pulse.idempotency', [
@@ -239,7 +239,7 @@ receivers:
 
 // routes/api.php
 Route::get('/health/idempotency', function () {
-    $metrics = app(\squipix\Idempotency\Metrics\MetricsCollector::class);
+    $metrics = app(\Squipix\Idempotency\Metrics\MetricsCollector::class);
     $summary = $metrics->getMetricsSummary();
 
     if (!$summary['enabled']) {
@@ -277,7 +277,7 @@ namespace Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use squipix\Idempotency\Metrics\MetricsCollector;
+use Squipix\Idempotency\Metrics\MetricsCollector;
 
 class IdempotencyMetricsTest extends TestCase
 {

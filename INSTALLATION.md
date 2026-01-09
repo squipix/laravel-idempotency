@@ -90,7 +90,7 @@ Route::middleware(['auth', 'idempotency'])->group(function () {
 protected $middlewareGroups = [
     'api' => [
         // ...
-        \squipix\Idempotency\Middleware\IdempotencyMiddleware::class,
+        \Squipix\Idempotency\Middleware\IdempotencyMiddleware::class,
     ],
 ];
 ```
@@ -104,7 +104,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
-use squipix\Idempotency\Jobs\IdempotentJobMiddleware;
+use Squipix\Idempotency\Jobs\IdempotentJobMiddleware;
 
 class ProcessPayment implements ShouldQueue
 {

@@ -42,7 +42,7 @@ curl -X POST https://your-app.com/api/payments \
 ### 1. Add Middleware to Job
 
 ```php
-use squipix\Idempotency\Jobs\IdempotentJobMiddleware;
+use Squipix\Idempotency\Jobs\IdempotentJobMiddleware;
 
 class ProcessPayment implements ShouldQueue
 {

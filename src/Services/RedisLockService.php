@@ -1,5 +1,6 @@
 <?php
-namespace squipix\Idempotency\Services;
+
+namespace Squipix\Idempotency\Services;
 
 // Placeholder for RedisLockService implementation
 class RedisLockService
