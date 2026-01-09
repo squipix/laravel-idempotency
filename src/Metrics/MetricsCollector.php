@@ -184,8 +184,14 @@ class MetricsCollector
         }
 
         try {
-            if (class_exists('\Laravel\Pulse\Facades\Pulse')) {
-                \Laravel\Pulse\Facades\Pulse::record($type, $value, json_encode($extra));
+            if (class_exists('\\Laravel\Pulse\Facades\Pulse')) {
+                // Pulse::record expects int|null as third parameter
+                $meta = null;
+                if (!empty($extra)) {
+                    // If you want to pass meta, you could use count($extra) or null
+                    $meta = count($extra);
+                }
+                \Laravel\Pulse\Facades\Pulse::record($type, $value, $meta);
             }
         } catch (\Throwable $e) {
             // Silently fail to not disrupt the application

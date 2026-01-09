@@ -7,7 +7,7 @@ parameters:
         - src
     excludePaths:
         - src/Console
-    checkMissingIterableValueType: false
-    checkGenericClassInNonGenericObjectType: false
     ignoreErrors:
+        - identifier: missingType.iterableValue
+        - identifier: missingType.generics
         - '#Unsafe usage of new static#'
