@@ -1,0 +1,16 @@
+{
+    "name": "squipix/laravel-idempotency",
+    "description": "Stripe-style idempotency for Laravel APIs and queues",
+    "autoload": {
+        "psr-4": {
+            "squipix\\Idempotency\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "squipix\\Idempotency\\IdempotencyServiceProvider"
+            ]
+        }
+    }
+}
