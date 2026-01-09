@@ -159,7 +159,7 @@ class MetricsCollector
                         $histogram->observe($value, array_values($labels));
                     }
                     break;
-                    
+
                 default: // counter
                     if (method_exists($this->prometheusCollector, 'getOrRegisterCounter')) {
                         $counter = $this->prometheusCollector->getOrRegisterCounter(
@@ -205,7 +205,7 @@ class MetricsCollector
         }
 
         $cachePrefix = 'idempotency:metrics:';
-        
+
         return [
             'enabled' => true,
             'cache_hits' => Cache::get($cachePrefix . 'cache_hits', 0),
@@ -226,9 +226,9 @@ class MetricsCollector
         }
 
         $cachePrefix = 'idempotency:metrics:';
-        $metrics = ['cache_hits', 'cache_misses', 'locks_acquired', 'locks_failed', 
+        $metrics = ['cache_hits', 'cache_misses', 'locks_acquired', 'locks_failed',
                    'payload_mismatches', 'jobs_executed', 'jobs_skipped', 'errors'];
-        
+
         foreach ($metrics as $metric) {
             Cache::forget($cachePrefix . $metric);
         }
