@@ -2,18 +2,46 @@
 namespace squipix\Idempotency;
 
 use Illuminate\Support\ServiceProvider;
+use squipix\Idempotency\Services\IdempotencyService;
+use squipix\Idempotency\Middleware\IdempotencyMiddleware;
+use squipix\Idempotency\Console\CleanupExpiredKeysCommand;
 
 class IdempotencyServiceProvider extends ServiceProvider
 {
     public function register()
     {
         $this->mergeConfigFrom(__DIR__.'/../config/idempotency.php', 'idempotency');
+
+        // Register the idempotency service as singleton
+        $this->app->singleton(IdempotencyService::class, function ($app) {
+            return new IdempotencyService(
+                $app['cache']->store(),
+                $app['db']->connection()
+            );
+        });
     }
 
     public function boot()
     {
+        // Publish config
         $this->publishes([
             __DIR__.'/../config/idempotency.php' => config_path('idempotency.php'),
-        ], 'config');
+        ], 'idempotency-config');
+
+        // Publish migrations
+        if ($this->app->runningInConsole()) {
+            $this->publishes([
+                __DIR__ . '/../database/migrations/create_idempotency_keys_table.php' => database_path('migrations/' . date('Y_m_d_His') . '_create_idempotency_keys_table.php'),
+            ], 'idempotency-migrations');
+
+            // Register commands
+            $this->commands([
+                CleanupExpiredKeysCommand::class,
+            ]);
+        }
+
+        // Register middleware alias
+        $router = $this->app['router'];
+        $router->aliasMiddleware('idempotency', IdempotencyMiddleware::class);
     }
 }

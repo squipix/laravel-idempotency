@@ -8,15 +8,16 @@ return new class extends Migration {
     {
         Schema::create('idempotency_keys', function (Blueprint $table) {
             $table->id();
-            $table->string('key');
+            $table->string('key', 255)->index();
             $table->string('method', 10);
-            $table->string('route');
-            $table->string('payload_hash')->nullable();
+            $table->string('route', 500);
+            $table->string('payload_hash', 64)->nullable();
             $table->json('response');
             $table->unsignedSmallInteger('status_code');
             $table->timestamps();
 
-            $table->unique(['key', 'method', 'route']);
+            $table->unique(['key', 'method', 'route'], 'idempotency_unique');
+            $table->index('created_at', 'idempotency_created_at_index');
         });
     }
 
