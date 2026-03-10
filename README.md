@@ -24,7 +24,7 @@ Stripe-style idempotency for Laravel APIs and queues. Prevent duplicate API requ
 ## Requirements
 
 - PHP 8.1 or higher
-- Laravel 10.x or 11.x
+- Laravel 10.x, 11.x, or 12.x
 - Redis (for distributed locking)
 
 ## Installation
@@ -479,7 +479,7 @@ For issues, questions, or contributions, please visit the [GitHub repository](ht
 
 
 [badge_license]:   https://img.shields.io/github/license/squipix/laravel-idempotency.svg?style=flat-square
-[badge_laravel]:   https://img.shields.io/badge/Laravel-9.x%20to%2010.x-orange.svg?style=flat-square
+[badge_laravel]:   https://img.shields.io/badge/Laravel-10.x,%2011.x,%2012.x-orange.svg?style=flat-square
 [badge_build]:     https://img.shields.io/github/actions/workflow/status/squipix/laravel-idempotency/run-tests.yml?style=flat-square
 [badge_coverage]:  https://img.shields.io/github/actions/workflow/status/squipix/laravel-idempotency/run-tests.yml?style=flat-square
 [badge_insight]:   https://img.shields.io/sensiolabs/i/de0353dd-df17-4656-b9c0-1eea95aa30a2.svg?style=flat-square

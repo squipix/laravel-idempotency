@@ -61,23 +61,26 @@ git commit -m "Initial commit: Laravel Idempotency v1.0.0"
 
 ```bash
 git remote add origin https://github.com/YOUR-USERNAME/laravel-idempotency.git
-git branch -M main
-git push -u origin main
+git commit -m "Release: Laravel Idempotency v1.1.0"
 ```
 
-### 4. Create Release Tag
+## 2. Tag Release
+
+Always tag releases with semantic versioning:
 
 ```bash
-git tag -a v1.0.0 -m "Release version 1.0.0"
-git push origin v1.0.0
+git tag -a v1.1.0 -m "Release version 1.1.0"
+git push origin v1.1.0
 ```
 
-### 5. Create GitHub Release
+## 3. GitHub Release
 
-1. Go to repository > Releases
-2. Click "Create a new release"
-3. Choose tag: v1.0.0
-4. Release title: `v1.0.0 - Initial Release`
+Once the tag is pushed, create a GitHub release:
+
+1. Go to repository releases
+2. Click "Draft a new release"
+3. Choose tag: v1.1.0
+4. Release title: `v1.1.0 - Release Name`
 5. Description: Copy from CHANGELOG.md
 6. Click "Publish release"
 

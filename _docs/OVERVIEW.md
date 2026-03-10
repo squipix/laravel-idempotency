@@ -342,8 +342,8 @@ CREATE TABLE idempotency_keys (
 
 5. **Publish to Packagist** (when ready)
    ```bash
-   git tag v1.0.0
-   git push origin v1.0.0
+   git tag v1.1.0
+   git push origin v1.1.0
    # Submit to packagist.org
    ```
 
