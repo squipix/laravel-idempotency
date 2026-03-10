@@ -16,9 +16,9 @@ class MetricsCollectorTest extends TestCase
     {
         $collector = new MetricsCollector();
         $collector->incrementCacheHit('redis');
-        $collector->incrementCacheMiss('redis');
+        $collector->incrementCacheMiss();
         $collector->recordRequestDuration(123, 'cache_hit');
         $collector->incrementJobExecuted('success');
-        $this->assertTrue(true); // If no exception, test passes
+        $this->expectNotToPerformAssertions();
     }
 }
