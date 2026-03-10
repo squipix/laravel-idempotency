@@ -124,8 +124,8 @@ Scramble auto-generates OpenAPI docs from your routes and controllers.
 
 /**
  * @OA\Info(
- *     version="1.0.0",
- *     title="Your API",
+ *     version="1.1.0",
+ *     title="Idempotency Endpoint",
  *     description="API with idempotency support"
  * )
  * @OA\Server(

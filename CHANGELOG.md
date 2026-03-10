@@ -2,6 +2,13 @@
 
 All notable changes to `laravel-idempotency` will be documented in this file.
 
+## [1.1.0] - 2026-03-10
+
+### Added
+- Support for Laravel 12
+- Support for PHP 8.4
+- Support for Testbench 10
+
 ## [1.0.0] - 2026-01-09
 
 ### Added
