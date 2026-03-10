@@ -15,6 +15,11 @@ class IdempotencyFeatureTest extends TestCase
         return [IdempotencyServiceProvider::class];
     }
 
+    protected function defineDatabaseMigrations()
+    {
+        $this->loadMigrationsFrom(__DIR__ . '/../../database/migrations');
+    }
+
     protected function setUp(): void
     {
         parent::setUp();

@@ -42,6 +42,17 @@ class IdempotencyMiddleware
 
         // Redis replay
         if ($cached = Cache::get($this->service->responseKey($key))) {
+            if (
+                config('idempotency.reject_payload_mismatch') &&
+                isset($cached['payload_hash']) &&
+                $cached['payload_hash'] !== $payloadHash
+            ) {
+                $this->metrics->incrementPayloadMismatch();
+                return response()->json([
+                    'message' => 'Payload mismatch for idempotency key'
+                ], 422);
+            }
+
             $this->metrics->incrementCacheHit('redis');
             $duration = microtime(true) - $startTime;
             $this->metrics->recordRequestDuration($duration, 'cache_hit');
@@ -84,7 +95,7 @@ class IdempotencyMiddleware
                 // Cache the DB response for faster replay
                 Cache::put(
                     $this->service->responseKey($key),
-                    $this->prepareResponseForCache($response),
+                    $this->prepareResponseForCache($response, $record->payload_hash),
                     now()->addSeconds(config('idempotency.response_ttl'))
                 );
 
@@ -110,7 +121,7 @@ class IdempotencyMiddleware
 
             Cache::put(
                 $this->service->responseKey($key),
-                $this->prepareResponseForCache($response),
+                $this->prepareResponseForCache($response, $payloadHash),
                 now()->addSeconds(config('idempotency.response_ttl'))
             );
 
@@ -133,12 +144,13 @@ class IdempotencyMiddleware
         return strlen($key) > 0 && strlen($key) <= 255;
     }
 
-    protected function prepareResponseForCache($response): array
+    protected function prepareResponseForCache($response, ?string $payloadHash = null): array
     {
         return [
             'content' => $response->getContent(),
             'status' => $response->getStatusCode(),
             'headers' => $response->headers->all(),
+            'payload_hash' => $payloadHash,
         ];
     }
 
