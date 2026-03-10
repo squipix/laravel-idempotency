@@ -36,6 +36,7 @@ class CleanupExpiredKeysCommand extends Command
         if ($dryRun) {
             $count = $service->countExpiredRecords($days);
             $this->warn("DRY RUN: Would delete {$count} records");
+
             return self::SUCCESS;
         }
 

@@ -64,7 +64,6 @@ class MetricsController extends Controller
 
 // routes/web.php or routes/api.php
 
-use App\Http\Controllers\MetricsController;
 use Illuminate\Support\Facades\Route;
 
 // Prometheus endpoint (protect with basic auth)
@@ -83,29 +82,33 @@ Route::get('/api/metrics/idempotency', [MetricsController::class, 'summary'])
 
 // app/Providers/AppServiceProvider.php
 
+use Illuminate\Support\ServiceProvider;
 use Prometheus\CollectorRegistry;
-use Prometheus\Storage\Redis;
 use Prometheus\Storage\InMemory;
+use Prometheus\Storage\Redis;
 
-public function register()
+class AppServiceProvider extends ServiceProvider
 {
-    // Redis adapter (recommended for production)
-    $this->app->singleton('prometheus', function ($app) {
-        Redis::setDefaultOptions([
-            'host' => config('database.redis.default.host', '127.0.0.1'),
-            'port' => config('database.redis.default.port', 6379),
-            'password' => config('database.redis.default.password'),
-            'database' => config('database.redis.default.database', 0),
-            'timeout' => 0.1,
-        ]);
+    public function register()
+    {
+        // Redis adapter (recommended for production)
+        $this->app->singleton('prometheus', function ($app) {
+            Redis::setDefaultOptions([
+                'host' => config('database.redis.default.host', '127.0.0.1'),
+                'port' => config('database.redis.default.port', 6379),
+                'password' => config('database.redis.default.password'),
+                'database' => config('database.redis.default.database', 0),
+                'timeout' => 0.1,
+            ]);
 
-        return new CollectorRegistry(new Redis());
-    });
+            return new CollectorRegistry(new Redis());
+        });
 
-    // Or use in-memory adapter (for testing)
-    // $this->app->singleton('prometheus', function ($app) {
-    //     return new CollectorRegistry(new InMemory());
-    // });
+        // Or use in-memory adapter (for testing)
+        // $this->app->singleton('prometheus', function ($app) {
+        //     return new CollectorRegistry(new InMemory());
+        // });
+    }
 }
 
 /*
@@ -242,10 +245,10 @@ Route::get('/health/idempotency', function () {
     $metrics = app(\Squipix\Idempotency\Metrics\MetricsCollector::class);
     $summary = $metrics->getMetricsSummary();
 
-    if (!$summary['enabled']) {
+    if (! $summary['enabled']) {
         return response()->json([
             'status' => 'disabled',
-            'message' => 'Metrics collection is disabled'
+            'message' => 'Metrics collection is disabled',
         ], 200);
     }
 
@@ -263,7 +266,7 @@ Route::get('/health/idempotency', function () {
         'checks' => [
             'cache_hit_ratio' => $hitRatio >= 70 ? 'pass' : 'fail',
             'error_count' => $summary['errors'] < 10 ? 'pass' : 'fail',
-        ]
+        ],
     ], $healthy ? 200 : 503);
 });
 
@@ -275,9 +278,9 @@ Route::get('/health/idempotency', function () {
 
 namespace Tests\Feature;
 
-use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Squipix\Idempotency\Metrics\MetricsCollector;
+use Tests\TestCase;
 
 class IdempotencyMetricsTest extends TestCase
 {
@@ -291,12 +294,14 @@ class IdempotencyMetricsTest extends TestCase
         // Make idempotent request twice
         $key = 'test-' . uniqid();
 
-        $this->postJson('/api/payments',
+        $this->postJson(
+            '/api/payments',
             ['amount' => 1000],
             ['Idempotency-Key' => $key]
         );
 
-        $this->postJson('/api/payments',
+        $this->postJson(
+            '/api/payments',
             ['amount' => 1000],
             ['Idempotency-Key' => $key]
         );
@@ -317,12 +322,14 @@ class IdempotencyMetricsTest extends TestCase
 
         $key = 'test-' . uniqid();
 
-        $this->postJson('/api/payments',
+        $this->postJson(
+            '/api/payments',
             ['amount' => 1000],
             ['Idempotency-Key' => $key]
         )->assertStatus(201);
 
-        $this->postJson('/api/payments',
+        $this->postJson(
+            '/api/payments',
             ['amount' => 2000], // Different amount
             ['Idempotency-Key' => $key]
         )->assertStatus(422);

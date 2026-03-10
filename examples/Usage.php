@@ -127,7 +127,10 @@ use Squipix\Idempotency\Jobs\IdempotentJobMiddleware;
 
 class CapturePaymentJob implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
 
     public $tries = 3;
     public $backoff = [10, 30, 60];
@@ -135,7 +138,8 @@ class CapturePaymentJob implements ShouldQueue
     public function __construct(
         public string $paymentId,
         public int $amount
-    ) {}
+    ) {
+    }
 
     /**
      * Add idempotent middleware
@@ -377,7 +381,7 @@ class PaymentIdempotencyTest extends TestCase
             ])
             ->assertStatus(422)
             ->assertJson([
-                'message' => 'Payload mismatch for idempotency key'
+                'message' => 'Payload mismatch for idempotency key',
             ]);
     }
 

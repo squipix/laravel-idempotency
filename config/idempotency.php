@@ -1,4 +1,5 @@
 <?php
+
 return [
     'header' => 'Idempotency-Key',
     'lock_ttl' => 10, // seconds

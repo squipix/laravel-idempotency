@@ -18,7 +18,7 @@ class MetricsCollector
 
     protected function initializeCollectors(): void
     {
-        if (!$this->enabled) {
+        if (! $this->enabled) {
             return;
         }
 
@@ -40,7 +40,7 @@ class MetricsCollector
 
     public function incrementCacheHit(string $type = 'redis'): void
     {
-        if (!$this->enabled) {
+        if (! $this->enabled) {
             return;
         }
 
@@ -50,7 +50,7 @@ class MetricsCollector
 
     public function incrementCacheMiss(): void
     {
-        if (!$this->enabled) {
+        if (! $this->enabled) {
             return;
         }
 
@@ -60,7 +60,7 @@ class MetricsCollector
 
     public function incrementLockAcquired(): void
     {
-        if (!$this->enabled) {
+        if (! $this->enabled) {
             return;
         }
 
@@ -70,7 +70,7 @@ class MetricsCollector
 
     public function incrementLockFailed(): void
     {
-        if (!$this->enabled) {
+        if (! $this->enabled) {
             return;
         }
 
@@ -80,7 +80,7 @@ class MetricsCollector
 
     public function incrementPayloadMismatch(): void
     {
-        if (!$this->enabled) {
+        if (! $this->enabled) {
             return;
         }
 
@@ -90,7 +90,7 @@ class MetricsCollector
 
     public function recordRequestDuration(float $duration, string $status): void
     {
-        if (!$this->enabled) {
+        if (! $this->enabled) {
             return;
         }
 
@@ -100,7 +100,7 @@ class MetricsCollector
 
     public function incrementJobExecuted(string $status = 'success'): void
     {
-        if (!$this->enabled) {
+        if (! $this->enabled) {
             return;
         }
 
@@ -110,7 +110,7 @@ class MetricsCollector
 
     public function incrementJobSkipped(): void
     {
-        if (!$this->enabled) {
+        if (! $this->enabled) {
             return;
         }
 
@@ -120,7 +120,7 @@ class MetricsCollector
 
     public function recordDatabaseQuery(string $operation, float $duration): void
     {
-        if (!$this->enabled) {
+        if (! $this->enabled) {
             return;
         }
 
@@ -130,7 +130,7 @@ class MetricsCollector
 
     public function incrementError(string $type): void
     {
-        if (!$this->enabled) {
+        if (! $this->enabled) {
             return;
         }
 
@@ -140,7 +140,7 @@ class MetricsCollector
 
     protected function recordToPrometheus(string $metric, $value, array $labels = [], string $type = 'counter'): void
     {
-        if (!$this->prometheusCollector) {
+        if (! $this->prometheusCollector) {
             return;
         }
 
@@ -159,6 +159,7 @@ class MetricsCollector
                         );
                         $histogram->observe($value, array_values($labels));
                     }
+
                     break;
 
                 default: // counter
@@ -171,6 +172,7 @@ class MetricsCollector
                         );
                         $counter->incBy($value, array_values($labels));
                     }
+
                     break;
             }
         } catch (\Throwable $e) {
@@ -180,7 +182,7 @@ class MetricsCollector
 
     protected function recordToPulse(string $type, $value, array $extra = []): void
     {
-        if (!$this->pulseRecorder) {
+        if (! $this->pulseRecorder) {
             return;
         }
 
@@ -188,7 +190,7 @@ class MetricsCollector
             if (class_exists('\\Laravel\Pulse\Facades\Pulse')) {
                 // Pulse::record expects int|null as third parameter
                 $meta = null;
-                if (!empty($extra)) {
+                if (! empty($extra)) {
                     // If you want to pass meta, you could use count($extra) or null
                     $meta = count($extra);
                 }
@@ -201,7 +203,7 @@ class MetricsCollector
 
     public function getMetricsSummary(): array
     {
-        if (!$this->enabled) {
+        if (! $this->enabled) {
             return ['enabled' => false];
         }
 
@@ -222,7 +224,7 @@ class MetricsCollector
 
     public function resetMetrics(): void
     {
-        if (!$this->enabled) {
+        if (! $this->enabled) {
             return;
         }
 

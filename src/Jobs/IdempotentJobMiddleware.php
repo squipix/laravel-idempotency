@@ -18,7 +18,7 @@ class IdempotentJobMiddleware
     public function handle($job, $next)
     {
         // Check if queue idempotency is enabled
-        if (!config('idempotency.queue.enabled', true)) {
+        if (! config('idempotency.queue.enabled', true)) {
             return $next($job);
         }
 
@@ -26,7 +26,7 @@ class IdempotentJobMiddleware
             ? $job->idempotencyKey()
             : null;
 
-        if (!$key) {
+        if (! $key) {
             return $next($job);
         }
 
@@ -38,19 +38,21 @@ class IdempotentJobMiddleware
             $this->metrics->incrementJobSkipped();
             Log::info('Job skipped due to idempotency', [
                 'job' => get_class($job),
-                'key' => $key
+                'key' => $key,
             ]);
+
             return;
         }
 
         // Acquire lock to prevent concurrent execution
         $lock = Cache::lock($lockKey, 60);
 
-        if (!$lock->get()) {
+        if (! $lock->get()) {
             Log::warning('Job already running', [
                 'job' => get_class($job),
-                'key' => $key
+                'key' => $key,
             ]);
+
             return;
         }
 
@@ -84,7 +86,7 @@ class IdempotentJobMiddleware
             Log::error('Job failed, idempotency key cleared', [
                 'job' => get_class($job),
                 'key' => $key,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
 
             throw $e;

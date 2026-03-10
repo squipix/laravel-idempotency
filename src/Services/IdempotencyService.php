@@ -11,7 +11,8 @@ class IdempotencyService
     public function __construct(
         protected CacheRepository $cache,
         protected Connection $db
-    ) {}
+    ) {
+    }
 
     public function responseKey(string $key): string
     {
@@ -28,6 +29,7 @@ class IdempotencyService
         // Sort keys for consistent hashing
         $payload = $request->all();
         ksort($payload);
+
         return hash('sha256', json_encode($payload, JSON_THROW_ON_ERROR));
     }
 

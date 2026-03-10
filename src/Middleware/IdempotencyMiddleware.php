@@ -4,19 +4,19 @@ namespace Squipix\Idempotency\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Squipix\Idempotency\Services\IdempotencyService;
 use Squipix\Idempotency\Metrics\MetricsCollector;
+use Squipix\Idempotency\Services\IdempotencyService;
 
 class IdempotencyMiddleware
 {
     public function __construct(
         protected IdempotencyService $service,
         protected MetricsCollector $metrics
-    ) {}
+    ) {
+    }
 
     public function handle(Request $request, Closure $next)
     {
@@ -29,12 +29,12 @@ class IdempotencyMiddleware
 
         $key = $request->header(config('idempotency.header'));
 
-        if (!$key) {
+        if (! $key) {
             return response()->json(['message' => 'Idempotency-Key required'], 400);
         }
 
         // Validate key format
-        if (!$this->isValidKey($key)) {
+        if (! $this->isValidKey($key)) {
             return response()->json(['message' => 'Invalid Idempotency-Key format'], 400);
         }
 
@@ -48,21 +48,24 @@ class IdempotencyMiddleware
                 $cached['payload_hash'] !== $payloadHash
             ) {
                 $this->metrics->incrementPayloadMismatch();
+
                 return response()->json([
-                    'message' => 'Payload mismatch for idempotency key'
+                    'message' => 'Payload mismatch for idempotency key',
                 ], 422);
             }
 
             $this->metrics->incrementCacheHit('redis');
             $duration = microtime(true) - $startTime;
             $this->metrics->recordRequestDuration($duration, 'cache_hit');
+
             return $this->restoreResponse($cached);
         }
 
         $lock = Cache::lock($this->service->lockKey($key), config('idempotency.lock_ttl'));
 
-        if (!$lock->get()) {
+        if (! $lock->get()) {
             $this->metrics->incrementLockFailed();
+
             return response()->json(['message' => 'Request in progress'], 409);
         }
 
@@ -83,8 +86,9 @@ class IdempotencyMiddleware
                     $record->payload_hash !== $payloadHash
                 ) {
                     $this->metrics->incrementPayloadMismatch();
+
                     return response()->json([
-                        'message' => 'Payload mismatch for idempotency key'
+                        'message' => 'Payload mismatch for idempotency key',
                     ], 422);
                 }
 
@@ -105,8 +109,9 @@ class IdempotencyMiddleware
             $response = $next($request);
 
             // Only cache successful responses (2xx status codes)
-            if (!$response->isSuccessful()) {
+            if (! $response->isSuccessful()) {
                 $lock->release();
+
                 return $response;
             }
 
@@ -130,8 +135,9 @@ class IdempotencyMiddleware
             Log::error('Idempotency middleware error', [
                 'key' => $key,
                 'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
+                'trace' => $e->getTraceAsString(),
             ]);
+
             throw $e;
         } finally {
             $lock->release();

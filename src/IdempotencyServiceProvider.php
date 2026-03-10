@@ -3,10 +3,10 @@
 namespace Squipix\Idempotency;
 
 use Illuminate\Support\ServiceProvider;
-use Squipix\Idempotency\Services\IdempotencyService;
-use Squipix\Idempotency\Middleware\IdempotencyMiddleware;
 use Squipix\Idempotency\Console\CleanupExpiredKeysCommand;
 use Squipix\Idempotency\Metrics\MetricsCollector;
+use Squipix\Idempotency\Middleware\IdempotencyMiddleware;
+use Squipix\Idempotency\Services\IdempotencyService;
 
 class IdempotencyServiceProvider extends ServiceProvider
 {
