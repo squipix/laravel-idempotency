@@ -23,13 +23,13 @@
         "illuminate/http": "^10.0|^11.0"
     },
     "require-dev": {
-        "orchestra/testbench": "^8.0|^9.0",
-        "phpunit/phpunit": "^10.0|^11.0",
         "friendsofphp/php-cs-fixer": "^3.0",
-        "phpstan/phpstan": "^1.10",
+        "laravel/pulse": "^1.0",
         "mockery/mockery": "^1.6",
-        "promphp/prometheus_client_php": "^2.0",
-        "laravel/pulse": "^1.0"
+        "orchestra/testbench": "^8.0|^9.0",
+        "phpstan/phpstan": "^2.1",
+        "phpunit/phpunit": "^10.0|^11.0",
+        "promphp/prometheus_client_php": "^2.0"
     },
     "suggest": {
         "promphp/prometheus_client_php": "Required for Prometheus metrics collection (^2.0)",

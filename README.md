@@ -1,10 +1,13 @@
 # Laravel Idempotency
 
-[![Latest Version](https://img.shields.io/packagist/v/squipix/laravel-idempotency.svg?style=flat-square)](https://packagist.org/packages/squipix/laravel-idempotency)
-[![Total Downloads](https://img.shields.io/packagist/dt/squipix/laravel-idempotency.svg?style=flat-square)](https://packagist.org/packages/squipix/laravel-idempotency)
-[![GitHub Tests](https://img.shields.io/github/actions/workflow/status/squipix/laravel-idempotency/tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/squipix/laravel-idempotency/actions)
-[![GitHub Code Style](https://img.shields.io/github/actions/workflow/status/squipix/laravel-idempotency/code-style.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/squipix/laravel-idempotency/actions)
-[![License](https://img.shields.io/packagist/l/squipix/laravel-idempotency.svg?style=flat-square)](https://packagist.org/packages/squipix/laravel-idempotency)
+[![GitHub Workflow Status][badge_build]][link-github-status]
+[![Coverage Status][badge_coverage]][link-github-status]
+[![SensioLabs Insight][badge_insight]][link-insight]
+[![GitHub Issues][badge_issues]][link-github-issues]
+
+[![Packagist][badge_package]][link-packagist]
+[![Packagist Release][badge_release]][link-packagist]
+[![Packagist Downloads][badge_downloads]][link-packagist]
 
 Stripe-style idempotency for Laravel APIs and queues. Prevent duplicate API requests and duplicate job executions with minimal configuration.
 
@@ -467,6 +470,30 @@ This package is open-sourced software licensed under the [MIT license](LICENSE).
 
 Inspired by [Stripe's idempotency implementation](https://stripe.com/docs/api/idempotent_requests).
 
+- [SQUIPIX][link-author]
+- [All Contributors][link-contributors]
+
 ## Support
 
 For issues, questions, or contributions, please visit the [GitHub repository](https://github.com/squipix/laravel-idempotency).
+
+
+[badge_license]:   https://img.shields.io/github/license/squipix/laravel-idempotency.svg?style=flat-square
+[badge_laravel]:   https://img.shields.io/badge/Laravel-9.x%20to%2010.x-orange.svg?style=flat-square
+[badge_build]:     https://img.shields.io/github/actions/workflow/status/squipix/laravel-idempotency/run-tests.yml?style=flat-square
+[badge_coverage]:  https://img.shields.io/github/actions/workflow/status/squipix/laravel-idempotency/run-tests.yml?style=flat-square
+[badge_insight]:   https://img.shields.io/sensiolabs/i/de0353dd-df17-4656-b9c0-1eea95aa30a2.svg?style=flat-square
+[badge_issues]:    https://img.shields.io/github/issues/squipix/laravel-idempotency.svg?style=flat-square
+[badge_package]:   https://img.shields.io/badge/package-squipix/laravel-idempotency-blue.svg?style=flat-square
+[badge_release]:   https://img.shields.io/github/v/release/squipix/laravel-idempotency.svg?style=flat-square
+[badge_downloads]: https://img.shields.io/packagist/dt/squipix/laravel-idempotency.svg?style=flat-square
+
+[link-arcan]: https://github.com/arcanedev-maroc
+[link-author]:        https://github.com/squipix
+[link-github-repo]:   https://github.com/squipix/laravel-idempotency
+[link-github-status]: https://github.com/squipix/laravel-idempotency/actions
+[link-github-issues]: https://github.com/squipix/laravel-idempotency/issues
+[link-contributors]:  https://github.com/squipix/laravel-idempotency/graphs/contributors
+[link-packagist]:     https://packagist.org/packages/squipix/laravel-idempotency
+[link-scrutinizer]:   https://scrutinizer-ci.com/g/squipix/laravel-idempotency/?branch=master
+[link-insight]:       https://insight.sensiolabs.com/projects/de0353dd-df17-4656-b9c0-1eea95aa30a2
